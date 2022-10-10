@@ -1,61 +1,77 @@
 package io.bayonet.fingerprint.services
 
-import java.io.IOException
+import android.content.Context
+import androidx.core.content.ContextCompat
 import java.net.URL
-import java.net.http.HttpRequest
-import java.net.http.HttpClient
-import java.net.http.HttpResponse
-import java.net.http.HttpResponse.BodyHandlers
+import java.net.HttpURLConnection
+import java.io.IOException
+// import java.net.ConnectException
+
+// import kotlinx.coroutines.newSingleThreadContext
+// import kotlinx.coroutines.*
+// import kotlinx.coroutines.GlobalScope
+import kotlin.jvm.Throws
+// import java.security.AccessController.getContext
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
+import com.fingerprintjs.android.fpjs_pro.Configuration
+import com.fingerprintjs.android.fpjs_pro.FingerprintJSFactory
+import com.fingerprintjs.android.fpjs_pro.FingerprintJSProResponse
+import com.fingerprintjs.android.fpjs_pro.Error
+
 import io.bayonet.fingerprint.core.domain.Fingerprint
 import io.bayonet.fingerprint.core.domain.IExternalService
 import io.bayonet.fingerprint.core.domain.IFingerprintService
-import io.bayonet.fingerprint.services.android.FingerprintJSService
+import io.bayonet.fingerprint.lib.R
 
-class FingerprintService(val apiKey: String): IFingerprintService {
-    private val externalServices: ArrayList<IExternalService> = ArrayList<IExternalService>()
+// import kotlinx.coroutines.currentCoroutineContext
 
+class FingerprintService(
+    private val apiKey: String,
+    private val ctx: Context,
+    val externalServices: ArrayList<IExternalService> = ArrayList<IExternalService>()): IFingerprintService {
     init {
         require(apiKey.isNotBlank()) { "The api key cannot be empty" }
-
-        val fingerprintJSService: IExternalService = FingerprintJSService()
-        externalServices.add(fingerprintJSService)
     }
 
-    // throws java.io.IOException, java.lang.InterruptedException;
-    override fun generateToken(): Fingerprint {
-        // The fingerprint variable to populate
+    @Throws(IOException::class, InterruptedException::class)
+    override suspend fun generateToken(): Fingerprint {
+        // Generate the token from the backend
+        val url = URL("")
+        val restApiHttpConnection = url.openConnection() as HttpURLConnection
+        restApiHttpConnection.setRequestProperty("Authorization", "Bearer $apiKey")
+
         var fingerprint: Fingerprint
-
-        // Prepare the RestApi request
-        val url = URL("http://localhost:9000/v3/token")
-        val httpClient = HttpClient.newHttpClient()
-        val authHeader: String = "Bearer ${this.apiKey}"
-        val restApiRequest = HttpRequest.newBuilder()
-            .uri(url.toURI())
-            .header("Authorization", authHeader)
-            .GET()
-            .build()
-
-        // Run the request
-        try {
-            val response: HttpResponse<String> = httpClient.send<String>(restApiRequest, BodyHandlers.ofString())
-            fingerprint = Json.decodeFromString<Fingerprint>(response.body())
-        } catch (ioError: IOException) {
-            throw Exception("input-output error ${ioError.message}")
-        } catch (iError: InterruptedException) {
-            throw Exception("interrupted error ${iError.message}")
-        } catch (err: Exception) {
-            throw Exception("error ${err.message}")
+        restApiHttpConnection.inputStream.bufferedReader().use { textReader ->
+            val jsonString: String = textReader.readText()
+            fingerprint = Json.decodeFromString<Fingerprint>(jsonString)
         }
 
-        // Request to the external services
-        for (externalService in this.externalServices) {
-            externalService.run()
+        // Prepare the fingerprintJS service
+        val factory = FingerprintJSFactory(ctx)
+        val configuration = Configuration(apiKey = "")
+
+        val fpjsClient = factory.createInstance(
+            configuration
+        )
+
+        // Store the fingerprintJS device
+        val tags = mutableMapOf("browserToken" to fingerprint.bayonetID)
+        if (fingerprint.environment != null) {
+            tags["environment"] = fingerprint.environment as String
         }
+        fpjsClient.getVisitorId(
+            tags = tags,
+            listener = { result: FingerprintJSProResponse ->
+                // Handle ID
+                println("ok $result")
+            },
+            errorListener = { err: Error ->
+                println("error $err")
+            },
+        )
 
         return fingerprint
     }

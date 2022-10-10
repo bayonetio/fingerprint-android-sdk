@@ -1,49 +1,12 @@
-// import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    kotlin("jvm") version "1.7.10"
-}
-
-buildscript {
-    plugins {
-        // Support convention plugins written in Kotlin. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
-        // `kotlin-dsl`
-        // kotlin("plugin.serialization") version "1.7.10"
-    }
-
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
-        // classpath("org.jetbrains.kotlinx:kotlinx-gradle-serialization-plugin:1.4.0")
-    }
-}
-
-// apply(plugin="kotlinx-serialization")
-
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
+    id("com.android.application") version "7.2.2" apply false
+    id("com.android.library") version "7.2.2" apply false
+    id("org.jetbrains.kotlin.android") version "1.7.10" apply false
 }
 
 /*
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
 */

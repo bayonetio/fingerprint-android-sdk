@@ -6,5 +6,7 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 data class Fingerprint(
     @JsonNames("bayonet_id")
-    val bayonetID: String
+    val bayonetID: String,
+
+    val environment: String?,
 )
