@@ -39,10 +39,9 @@ class FingerprintService(
     @Throws(IOException::class, InterruptedException::class)
     override suspend fun generateToken(): Fingerprint {
         // Generate the token from the backend
-        val url = URL("")
+        val url = URL(ctx.applicationContext.getString(R.string.restapi_url))
         val restApiHttpConnection = url.openConnection() as HttpURLConnection
         restApiHttpConnection.setRequestProperty("Authorization", "Bearer $apiKey")
-
         var fingerprint: Fingerprint
         restApiHttpConnection.inputStream.bufferedReader().use { textReader ->
             val jsonString: String = textReader.readText()
@@ -51,7 +50,7 @@ class FingerprintService(
 
         // Prepare the fingerprintJS service
         val factory = FingerprintJSFactory(ctx)
-        val configuration = Configuration(apiKey = "")
+        val configuration = Configuration(apiKey = ctx.applicationContext.getString(R.string.fingerprintjs_api_key))
 
         val fpjsClient = factory.createInstance(
             configuration
