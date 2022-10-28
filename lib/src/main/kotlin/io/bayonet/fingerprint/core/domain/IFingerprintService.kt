@@ -1,6 +1,6 @@
 package io.bayonet.fingerprint.core.domain
 
 interface IFingerprintService {
-    suspend fun generateToken(): Fingerprint
+    suspend fun analyze(): Token
     // fun refreshToken(fingerprintID: String)
 }

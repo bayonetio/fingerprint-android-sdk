@@ -10,6 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        // Add fingerprintjs dependency
         maven(url="https://maven.fpregistry.io/releases")
     }
 }
