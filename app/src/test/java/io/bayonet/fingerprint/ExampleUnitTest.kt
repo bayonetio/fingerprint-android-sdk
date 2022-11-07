@@ -1,4 +1,4 @@
-package io.bayonet.fingerprint.mobile
+package io.bayonet.fingerprint
 
 import org.junit.Test
 

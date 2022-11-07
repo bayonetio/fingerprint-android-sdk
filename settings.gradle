@@ -10,11 +10,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-
-        // Add fingerprintjs dependency
-        maven(url="https://maven.fpregistry.io/releases")
+        maven {
+            url 'https://maven.fpregistry.io/releases'
+        }
     }
 }
-rootProject.name = "Fingerprint Mobile"
-include(":app")
-include(":lib")
+rootProject.name = "Fingerprint Android SDK"
+include ':lib'
