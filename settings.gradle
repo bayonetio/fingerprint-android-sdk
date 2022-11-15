@@ -11,7 +11,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven {
-            url 'https://maven.fpregistry.io/releases'
+            url "https://maven.fpregistry.io/releases"
         }
     }
 }
