@@ -11,6 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
+/**
+ * FingerprintService is the service to manage the device's fingerprint.
+ *
+ * @property ctx is the android context
+ * @property apiKey is the fingerprint Bayonet api key
+ */
 class FingerprintService(
     private val ctx: Context,
     private val apiKey: String,

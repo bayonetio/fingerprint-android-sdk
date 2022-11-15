@@ -4,12 +4,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
 /**
- * Represents the response from the RestAPI when request a new token.
+ * Represents configuration for external services used by the fingerprint.
  *
- * @property bayonetID the token identifier in bayonet service.
- * @property environment the token environment in bayonet service.
- * @property services the configuration for external services.
- * @constructor Creates a RestAPI response.
+ * @property fingerprintjs is the configuration for the FingeprintJS service.
+ * @constructor creates the external services from a RestAPI response.
  */
 @Serializable
 data class ExternalServicesConfigurationResponse(
