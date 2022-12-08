@@ -9,7 +9,7 @@ import java.net.URL
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-const val REST_API_URL = "http://10.0.2.2:9000"
+const val REST_API_URL = "http://10.0.2.2:9000/v3"
 const val REST_API_GET_TOKEN = "token"
 
 /**
