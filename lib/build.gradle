@@ -40,14 +40,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
-    //    publishing {
-    //        singleVariant("release") {
-    //            // if you don't want sources/javadoc, remove these lines
-    //            withSourcesJar()
-    //            withJavadocJar()
-    //        }
-    //    }
 }
 
 afterEvaluate {
@@ -61,13 +53,20 @@ afterEvaluate {
                 version = '0.0.1'
             }
         }
+
+        repositories {
+            mavenLocal()
+        }
     }
 }
 
 dependencies {
-    implementation 'com.fingerprint.android:pro:2.2.1'
+    implementation project(':fingerprintjs')
+
+    // Resolved by jitpack
     implementation 'com.github.fingerprintjs:fingerprint-android:2.0.0'
 
+    // Resolved by Central Maven
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'

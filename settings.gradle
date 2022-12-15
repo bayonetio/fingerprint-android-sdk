@@ -19,10 +19,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "Fingerprint Android SDK"
 include ':lib'
+include ':fingerprintjs'
 
 // Include the aar dependency
-includeBuild('fingerprintjs') {
-    dependencySubstitution {
-        substitute module('com.fingerprint.android:pro:2.2.1') using project(':')
-    }
-}
+// @see https://github.com/brim-borium/spotify_sdk/issues/99#issuecomment-878910598
+// @see https://github.com/rsicarelli/SpotifySdkCompositeBuild/
+// includeBuild('fingerprintjs') {
+//    dependencySubstitution {
+//        substitute module('com.fingerprint.android:pro:2.2.1') using project(':')
+//    }
+//}
