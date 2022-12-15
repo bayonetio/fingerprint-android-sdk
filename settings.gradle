@@ -10,10 +10,19 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
         maven {
-            url "https://maven.fpregistry.io/releases"
+            url 'https://jitpack.io'
         }
     }
 }
+
 rootProject.name = "Fingerprint Android SDK"
 include ':lib'
+
+// Include the aar dependency
+includeBuild('fingerprintjs') {
+    dependencySubstitution {
+        substitute module('com.fingerprint.android:pro:2.2.1') using project(':')
+    }
+}

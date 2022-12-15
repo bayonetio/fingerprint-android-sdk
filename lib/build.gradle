@@ -3,6 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     id 'maven-publish'
+
+    // kotlin 'plugin.serialization' version '1.7.20'
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.7.20"
     // id 'com.palantir.git-version' version '0.15.0'
 }
 
@@ -62,7 +65,9 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation 'com.fingerprint.android:pro:2.1.1'
+    implementation 'com.fingerprint.android:pro:2.2.1'
+    implementation 'com.github.fingerprintjs:fingerprint-android:2.0.0'
+
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'

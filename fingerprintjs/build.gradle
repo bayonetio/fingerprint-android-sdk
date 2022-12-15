@@ -1,0 +1,9 @@
+plugins {
+    id 'maven-publish'
+}
+
+configurations.maybeCreate("default")
+artifacts.add("default", file('pro-2.2.1.aar'))
+
+group = 'com.fingerprint.android:pro'
+version = '2.2.1'
