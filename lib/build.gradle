@@ -4,9 +4,7 @@ plugins {
 
     id 'maven-publish'
 
-    // kotlin 'plugin.serialization' version '1.7.20'
     id "org.jetbrains.kotlin.plugin.serialization" version "1.7.20"
-    // id 'com.palantir.git-version' version '0.15.0'
 }
 
 group = "com.github.bayonetio"
@@ -61,7 +59,8 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation project(':fingerprintjs')
+    // implementation project(':fingerprintjs')
+    implementation "com.fingerprint.android:pro:2.2.2@aar"
 
     // Resolved by jitpack
     implementation 'com.github.fingerprintjs:fingerprint-android:2.0.0'

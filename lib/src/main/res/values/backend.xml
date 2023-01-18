@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_environment">live</string>
+    <string name="live">live</string>
+    <string name="sandbox">sandbox</string>
+    <string name="live_url">http://10.0.2.2:9000/v3</string>
+    <string name="sandbox_url">http://10.0.2.2:9000/v3</string>
+    <string name="develop_url">http://10.0.2.2:9000/v3</string>
+</resources>

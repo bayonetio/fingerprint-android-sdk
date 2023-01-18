@@ -9,8 +9,9 @@ import java.net.URL
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-const val REST_API_URL = "http://10.0.2.2:9000/v3"
-const val REST_API_GET_TOKEN = "token"
+import io.bayonet.fingeprint.R
+
+val ENVIRONMENT = System.getenv("ENVIRONMENT") ?: "live"
 
 /**
  * RestAPIService is the service that create the request for the RestAPI and process the response
@@ -20,8 +21,20 @@ class RestAPIService(
     private val ctx: Context,
     private val apiKey: String,
 ): IRestAPI {
+    private lateinit var REST_API_URL: String
+    private lateinit var REST_API_GET_TOKEN: String
     init {
         require(apiKey.isNotBlank()) { "The api key cannot be empty" }
+
+        // Get the backend url
+        REST_API_URL = when (ENVIRONMENT) {
+            ctx.getString(R.string.live) -> ctx.getString(R.string.live_url)
+            ctx.getString(R.string.sandbox) -> ctx.getString(R.string.sandbox_url)
+            else -> ctx.getString(R.string.develop_url)
+        }
+
+        // Path to get the token
+        REST_API_GET_TOKEN  = "token"
     }
 
     /**
