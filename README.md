@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 import android.widget.TextView
 
 import io.bayonet.fingerprint.core.domain.Token
-import io.bayonet.fingerprint.android.services.FingerprintService
+import io.bayonet.fingerprint.services.FingerprintService
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,10 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-
-    id 'maven-publish'
-
     id "org.jetbrains.kotlin.plugin.serialization" version "1.7.20"
+    id 'maven-publish'
 }
 
 group = "com.github.bayonetio"
@@ -12,13 +10,10 @@ group = "com.github.bayonetio"
 version = '0.0.1'
 
 android {
-    // compileSdk 32
     compileSdk 30
 
     defaultConfig {
-        // minSdk 16
         minSdk 22
-        // targetSdk 32
         targetSdk 30
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -59,8 +54,9 @@ afterEvaluate {
 }
 
 dependencies {
-    // implementation project(':fingerprintjs')
-    implementation "com.fingerprint.android:pro:2.2.2@aar"
+    // implementation project(':services')
+    // implementation "com.fingerprint.android:pro:2.2.2@aar"
+    implementation project(path: ':services', configuration: 'default')
 
     // Resolved by jitpack
     implementation 'com.github.fingerprintjs:fingerprint-android:2.0.0'

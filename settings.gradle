@@ -23,7 +23,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Fingerprint Android SDK"
 include ':lib'
-// include ':fingerprintjs'
+include ':services'
 
 // Include the aar dependency
 // @see https://github.com/brim-borium/spotify_sdk/issues/99#issuecomment-878910598
