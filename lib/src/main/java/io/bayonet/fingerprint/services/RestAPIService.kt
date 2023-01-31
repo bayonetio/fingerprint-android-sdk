@@ -1,6 +1,5 @@
 package io.bayonet.fingerprint.services
 
-import android.content.Context
 import io.bayonet.fingerprint.core.domain.GetTokenResponse
 import io.bayonet.fingerprint.core.domain.IRestAPI
 import java.net.HttpURLConnection
@@ -8,33 +7,31 @@ import java.net.URL
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.jvm.Throws
+import java.lang.Exception
 
-import io.bayonet.fingeprint.R
-
-val ENVIRONMENT = System.getenv("ENVIRONMENT") ?: "live"
+data class RestAPIServiceParameters(
+    val url: String,
+    val apiKey: String,
+)
 
 /**
  * RestAPIService is the service that create the request for the RestAPI and process the response
  * to provide a fingerprint domain result.
  */
 class RestAPIService(
-    private val ctx: Context,
-    private val apiKey: String,
+    private val params: RestAPIServiceParameters
 ): IRestAPI {
-    private lateinit var REST_API_URL: String
-    private lateinit var REST_API_GET_TOKEN: String
+    private val REST_API_GET_TOKEN_PATH: String = "token"
     init {
-        require(apiKey.isNotBlank()) { "The api key cannot be empty" }
+        require(params.apiKey.isNotBlank()) { "The api key cannot be empty" }
+        require(params.url.isNotBlank()) { "The url cannot be empty" }
 
-        // Get the backend url
-        REST_API_URL = when (ENVIRONMENT) {
-            ctx.getString(R.string.live) -> ctx.getString(R.string.live_url)
-            ctx.getString(R.string.sandbox) -> ctx.getString(R.string.sandbox_url)
-            else -> ctx.getString(R.string.develop_url)
+        try {
+            URL(params.url)
+        } catch (_: Exception) {
+            throw IllegalArgumentException("The url is not valid")
         }
-
-        // Path to get the token
-        REST_API_GET_TOKEN  = "token"
     }
 
     /**
@@ -43,15 +40,30 @@ class RestAPIService(
      *
      * @return a GetTokenResponse
      */
+    @Throws(Exception::class)
     override fun getToken(): GetTokenResponse {
-        val url = URL("${REST_API_URL}/${REST_API_GET_TOKEN}")
+        val url = URL("${params.url}/${REST_API_GET_TOKEN_PATH}")
         val restApiHttpConnection = url.openConnection() as HttpURLConnection
-        restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${apiKey}")
+        restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${params.apiKey}")
 
-        /*
-        if (restApiHttpConnection.responseCode != HttpURLConnection.HTTP_OK) {
+        val unauthorizedRequestCodes = listOf<Int>(
+            HttpURLConnection.HTTP_UNAUTHORIZED,
+        )
+
+        val error = when (restApiHttpConnection.responseCode) {
+            // Unauthorized error
+            in unauthorizedRequestCodes -> Exception("unauthorized")
+            // Server errors
+            in 500..599 -> Exception(restApiHttpConnection.responseMessage)
+            // Request errors
+            in 400..499 -> Exception("malformed request")
+            // No error
+            else -> null
         }
-        */
+
+        if (error != null) {
+            throw error
+        }
 
         var tokenResponse: GetTokenResponse
         restApiHttpConnection.inputStream.bufferedReader().use { textReader ->
