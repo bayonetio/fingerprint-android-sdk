@@ -2,6 +2,7 @@ package io.bayonet.fingerprint.services
 
 import io.bayonet.fingerprint.core.domain.GetTokenResponse
 import io.bayonet.fingerprint.core.domain.IRestAPI
+import io.bayonet.fingerprint.core.domain.Token
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -23,6 +24,8 @@ class RestAPIService(
     private val params: RestAPIServiceParameters
 ): IRestAPI {
     private val REST_API_GET_TOKEN_PATH: String = "token"
+    private val REST_API_REFRESH_TOKEN_PATH: String = "refresh"
+
     init {
         require(params.apiKey.isNotBlank()) { "The api key cannot be empty" }
         require(params.url.isNotBlank()) { "The url cannot be empty" }
@@ -72,5 +75,36 @@ class RestAPIService(
         }
 
         return tokenResponse
+    }
+
+    /**
+     * refresh update the token
+     *
+     * @return void
+     */
+    @Throws(Exception::class)
+    override fun refresh(token: Token) {
+        val url = URL("${params.url}/${REST_API_REFRESH_TOKEN_PATH}/${token.bayonetID}")
+        val restApiHttpConnection = url.openConnection() as HttpURLConnection
+        restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${params.apiKey}")
+
+        val unauthorizedRequestCodes = listOf<Int>(
+            HttpURLConnection.HTTP_UNAUTHORIZED,
+        )
+
+        val error = when (restApiHttpConnection.responseCode) {
+            // Unauthorized error
+            in unauthorizedRequestCodes -> Exception("unauthorized")
+            // Server errors
+            in 500..599 -> Exception(restApiHttpConnection.responseMessage)
+            // Request errors
+            in 400..499 -> Exception("malformed request")
+            // No error
+            else -> null
+        }
+
+        if (error != null) {
+            throw error
+        }
     }
 }

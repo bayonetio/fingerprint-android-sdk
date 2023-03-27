@@ -22,5 +22,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Fingerprint Android SDK"
-include ':lib'
 include ':services'
+include ':lib'
+include ':app'

@@ -3,13 +3,16 @@ package io.bayonet.fingerprint.services
 import android.content.Context
 import java.io.IOException
 import kotlin.jvm.Throws
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 
+import io.bayonet.fingeprint.R
 import io.bayonet.fingerprint.core.domain.*
-
 import io.bayonet.fingerprint.services.android.AndroidFingerprintJSService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
+
+val STORE_KEY = "bayonet"
+val STORE_TOKEN_KEY = "token"
 
 /**
  * FingerprintService is the service to manage the device's fingerprint.
@@ -21,14 +24,28 @@ class FingerprintService(
     private val ctx: Context,
     private val apiKey: String,
 ): IFingerprintService {
-    protected lateinit var restAPIService: IRestAPI;
+    // Determine the environment
+    val ENVIRONMENT = System.getenv("ENVIRONMENT") ?: "develop"
+
+    // The RestAPI Service
+    private var restAPIService: IRestAPI;
 
     init {
         // Validate the parameters
         require(apiKey.isNotBlank()) { "The api key cannot be empty" }
 
+        val url = when (ENVIRONMENT) {
+            "develop" -> ctx.getString(R.string.develop_url)
+            "sandbox" -> ctx.getString(R.string.sandbox_url)
+            else -> ctx.getString(R.string.live_url)
+        }
+
         // Initialize the RestAPI Service
-        this.restAPIService = RestAPIService(ctx, apiKey)
+        val restAPIServiceParameters = RestAPIServiceParameters(
+            url,
+            apiKey,
+        )
+        this.restAPIService = RestAPIService(restAPIServiceParameters)
     }
 
     /**
@@ -39,22 +56,77 @@ class FingerprintService(
      */
     @Throws(IOException::class, InterruptedException::class)
     override suspend fun analyze(): Token {
-        // Generate token from the RestAPI
-        val tokenResponse: GetTokenResponse = this.restAPIService.getToken()
+        var token: Token
 
-        // Create components from the response
-        // Build the token
-        val token = Token(tokenResponse.bayonetID, tokenResponse.environment)
+        val storedToken = this.getStoreToken()
+        // The token not exists
+        if (storedToken == null) {
 
-        // Build the services configuration
-        val fingerprintjsServiceConfiguration = FingerprintJSServiceConfiguration(tokenResponse.services.fingerprintjs.apiKey)
+            // Generate token from the RestAPI
+            val tokenResponse: GetTokenResponse = this.restAPIService.getToken()
 
-        // Initialize the FingerprintJS service
-        val fingerprintjsService = AndroidFingerprintJSService(ctx, fingerprintjsServiceConfiguration, token)
+            token = Token(tokenResponse.bayonetID, tokenResponse.environment)
 
-        // Analyze with the FingerprintJS service
-        fingerprintjsService.analyze()
+            // Save the generated token
+            this.setStoreToken(token)
+
+            // Start third services
+            // Build the services configuration
+            val fingerprintjsServiceConfiguration = FingerprintJSServiceConfiguration(tokenResponse.services.fingerprintjs.apiKey)
+
+            // Initialize the FingerprintJS service
+            val fingerprintjsService = AndroidFingerprintJSService(ctx, fingerprintjsServiceConfiguration, token)
+
+            // Analyze with the FingerprintJS service
+            fingerprintjsService.analyze()
+        } else {
+            token = storedToken
+            try {
+                restAPIService.refresh(token)
+            } catch (err: Exception) {
+                //
+            }
+        }
 
         return token
+    }
+
+    /**
+     * getStoreToken load the token from shared preferences
+     *
+     * @returns a token or null
+     */
+    private fun getStoreToken(): Token? {
+        var storedToken: Token? = null
+        // Get the repository reference
+        val sharedPreferences = ctx.getSharedPreferences(STORE_KEY, Context.MODE_PRIVATE)
+
+        // Read the stored json token
+        val dataTokenStored: String? = sharedPreferences.getString(STORE_TOKEN_KEY, "{}")
+        if (dataTokenStored != null) {
+            try {
+                // Parse the json string to a Token
+                storedToken = Json.decodeFromString<Token>(dataTokenStored)
+            } catch (error: Exception) {
+                // println("Err${error}")
+            }
+        }
+
+        return storedToken
+    }
+
+    /**
+     * setStoreToken sove the token in shared preferences
+     *
+     * @returns void
+     */
+    private fun setStoreToken(token: Token): Unit {
+        // Get the repository reference
+        val sharedPreferences = ctx.getSharedPreferences(STORE_KEY, Context.MODE_PRIVATE)
+
+        with (sharedPreferences.edit()) {
+            putString(STORE_TOKEN_KEY, Json.encodeToString(token))
+            apply()
+        }
     }
 }

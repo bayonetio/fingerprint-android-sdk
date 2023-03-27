@@ -2,22 +2,19 @@ package io.bayonet.fingerprint.services.android
 
 import android.content.Context
 import com.fingerprintjs.android.fpjs_pro.FingerprintJS
-import com.fingerprintjs.android.fpjs_pro.FingerprintJSProResponse
 import com.fingerprintjs.android.fpjs_pro.FingerprintJSFactory
 import com.fingerprintjs.android.fpjs_pro.Configuration
 
 import io.bayonet.fingerprint.core.domain.Token
 import io.bayonet.fingerprint.core.domain.FingerprintJSServiceConfiguration
 import io.bayonet.fingerprint.core.domain.IExternalService
-import kotlinx.coroutines.delay
-import java.util.concurrent.TimeUnit
 
 class AndroidFingerprintJSService(
     private val ctx: Context,
     private val config: FingerprintJSServiceConfiguration,
     private val token: Token,
 ): IExternalService {
-    protected lateinit var fingerprintjsClient:  FingerprintJS;
+    private val fingerprintjsClient:  FingerprintJS;
 
     init {
         // Prepare the fingerprintJS client
