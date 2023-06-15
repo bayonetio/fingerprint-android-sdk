@@ -1,7 +1,7 @@
-# Fingerprint Android SDK
-A basic library to generate the fingerprint of a device.
+# fingerprint-android-sdk
+The *fingerprint-android-sdk* is a library for *Android* that determines the device's fingerprint and store it in our backend.
 
-This is developed with **Kotlin**.
+This was developed with *Kotlin*.
 
 ## Integrate into your project
 
@@ -30,10 +30,10 @@ dependencies {
 ### Example of the use in your app
 This is an example of the use of *Fingerprint Android SDK*.
 ```kotlin
-package io.bayonet.fingerprint.example
+package io.bayonet.fingerprint.app
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -45,24 +45,25 @@ import io.bayonet.fingerprint.services.FingerprintService
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
-        val helloTextView = findViewById<TextView>(R.id.hello_text_view)
+        val tokenView = findViewById<TextView>(R.id.token_text)
+
+        val fingerprintService = FingerprintService(
+            this,
+            "12345678"
+        )
 
         runOnUiThread(Runnable {
-            val apiKey = "your-fingeprint-api-key"
-            val fingerprintService = FingerprintService(
-                apiKey,
-                this, // The main context
-            )
-
             GlobalScope.launch {
                 try {
                     // Generate the device token
                     val token: Token = fingerprintService.analyze()
 
                     // Show the token generated in the view
-                    helloTextView.text = token.bayonetID
+                    tokenView.text = token.bayonetID
+                    // print("token: ${token}")
                 } catch (e: Exception) {
                     println("ERROR ${e}")
                 }
