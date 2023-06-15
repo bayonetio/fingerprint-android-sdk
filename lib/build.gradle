@@ -1,0 +1,100 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.7.20"
+    id 'maven-publish'
+}
+
+tasks.withType(Test) {
+    // Set environment variable
+    // environment "ENVIRONMENT", "test"
+
+    // Show logs
+    // testLogging {
+    //    showStandardStreams = true
+    //}
+
+    useJUnitPlatform()
+}
+
+group = "com.github.bayonetio"
+//version = gitVersion()
+version = '0.0.1'
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 22
+        targetSdk 32
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+
+        // testApplicationId "com.example.test"
+        // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // testHandleProfiling true
+        // testFunctionalTest true
+    }
+
+    // useLibrary 'android.test.mock'
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.release
+
+                groupId = 'io.bayonet.fingerprint'
+                artifactId = 'fingerprint-android-sdk'
+                version = '0.0.1'
+            }
+        }
+
+        repositories {
+            mavenLocal()
+        }
+    }
+}
+
+dependencies {
+    implementation project(path: ':services', configuration: 'default')
+
+    // Resolved by jitpack
+    implementation 'com.github.fingerprintjs:fingerprint-android:2.0.0'
+
+    // Resolved by Central Maven
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'
+
+    //
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+
+    // Unit tests
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'io.github.infeez.kotlin-mock-server:mock-server-core:1.0.0'
+    testImplementation 'io.github.infeez.kotlin-mock-server:mock-server-okhttp:1.0.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+
+    // Android tests
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
+    androidTestImplementation 'androidx.test:core:1.5.0'
+}
