@@ -3,10 +3,10 @@ plugins {
 }
 
 configurations.maybeCreate("default")
-artifacts.add("default", file('pro-2.2.2.aar'))
+artifacts.add("default", file('pro-2.3.1.aar'))
 
 group = 'com.fingerprint.android:pro'
-version = '2.2.1'
+version = '2.3.1'
 
 afterEvaluate {
     publishing {
@@ -14,7 +14,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 groupId = 'com.fingerprint.android.pro'
                 artifactId = 'fingerprintjs-android'
-                version = '2.2.1'
+                version = '2.3.1'
             }
         }
     }
