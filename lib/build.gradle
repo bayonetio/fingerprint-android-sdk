@@ -19,13 +19,13 @@ tasks.withType(Test) {
 
 group = "com.github.bayonetio"
 //version = gitVersion()
-version = '0.0.1'
+version = '3.0.0'
 
 android {
     compileSdk 32
 
     defaultConfig {
-        minSdk 22
+        minSdk 21
         targetSdk 32
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
