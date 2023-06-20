@@ -5,5 +5,5 @@
     <string name="sandbox">sandbox</string>
     <string name="live_url">https://api.bayonet.io/v3/fp</string>
     <string name="sandbox_url">https://staging-api.bayonet.io/v3/fp</string>
-    <string name="develop_url">http://10.0.2.2:9000/v3</string>
+    <string name="develop_url">http://10.0.2.2:9000/v3/fp</string>
 </resources>

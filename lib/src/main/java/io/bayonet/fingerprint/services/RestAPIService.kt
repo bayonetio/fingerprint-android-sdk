@@ -86,6 +86,7 @@ class RestAPIService(
     override fun refresh(token: Token) {
         val url = URL("${params.url}/${REST_API_REFRESH_TOKEN_PATH}/${token.bayonetID}")
         val restApiHttpConnection = url.openConnection() as HttpURLConnection
+        restApiHttpConnection.requestMethod = "POST"
         restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${params.apiKey}")
 
         val unauthorizedRequestCodes = listOf<Int>(
