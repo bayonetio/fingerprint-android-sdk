@@ -26,10 +26,8 @@ val STORE_TOKEN_KEY = "token"
 class FingerprintService(
     private val ctx: Context,
     private val apiKey: String,
+    private val BAYONET_ENVIRONMENT: String? = "live"
 ): IFingerprintService {
-    // Determine the environment
-    val ENVIRONMENT = System.getenv("ENVIRONMENT") ?: "develop"
-
     // The RestAPI Service
     private var restAPIService: IRestAPI;
 
@@ -39,7 +37,7 @@ class FingerprintService(
         // Validate the parameters
         require(apiKey.isNotBlank()) { "The api key cannot be empty" }
 
-        val url = when (ENVIRONMENT) {
+        val url = when (BAYONET_ENVIRONMENT) {
             "develop" -> ctx.getString(R.string.develop_url)
             "sandbox" -> ctx.getString(R.string.sandbox_url)
             else -> ctx.getString(R.string.live_url)
