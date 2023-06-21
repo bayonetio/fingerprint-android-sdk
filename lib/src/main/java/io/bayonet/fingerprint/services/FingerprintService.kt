@@ -39,7 +39,7 @@ class FingerprintService(
 
         val url = when (BAYONET_ENVIRONMENT) {
             "develop" -> ctx.getString(R.string.develop_url)
-            "sandbox" -> ctx.getString(R.string.sandbox_url)
+            "staging" -> ctx.getString(R.string.sandbox_url)
             else -> ctx.getString(R.string.live_url)
         }
 
