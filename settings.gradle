@@ -5,6 +5,7 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -15,12 +16,19 @@ dependencyResolutionManagement {
             url 'https://jitpack.io'
         }
 
+        maven {
+            url 'https://maven.fpregistry.io/releases'
+        }
+
+        /*
         flatDir {
             dirs 'services'
         }
+         */
     }
 }
 
 rootProject.name = "Fingerprint Android SDK"
 include ':services'
 include ':lib'
+// include ':app'
