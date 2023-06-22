@@ -15,15 +15,9 @@ dependencyResolutionManagement {
         maven {
             url 'https://jitpack.io'
         }
-
-        flatDir {
-            dirs 'thirdLibraries'
-        }
     }
 }
 
 rootProject.name = "Fingerprint Android SDK"
-// include ':services'
-include ':thirdLibraries'
+include ':services'
 include ':lib'
-// include ':app'
