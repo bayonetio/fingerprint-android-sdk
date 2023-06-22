@@ -2,13 +2,10 @@ package io.bayonet.fingerprint.services
 
 import android.content.Context
 import androidx.annotation.WorkerThread
-import java.io.IOException
-import kotlin.jvm.Throws
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 
-import io.bayonet.fingeprint.R
 import io.bayonet.fingerprint.core.domain.*
 import io.bayonet.fingerprint.services.android.AndroidFingerprintJSService
 import java.util.concurrent.ExecutorService
