@@ -19,7 +19,7 @@ tasks.withType(Test) {
 
 group = "com.github.bayonetio"
 //version = gitVersion()
-version = '3.0.0'
+version = '3.2.1'
 
 android {
     compileSdk 32
@@ -30,14 +30,7 @@ android {
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
-
-        // testApplicationId "com.example.test"
-        // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // testHandleProfiling true
-        // testFunctionalTest true
     }
-
-    // useLibrary 'android.test.mock'
 
     buildTypes {
         release {
@@ -76,7 +69,7 @@ dependencies {
     implementation project(path: ':services', configuration: 'default')
 
     // Resolved by jitpack
-    implementation 'com.github.fingerprintjs:fingerprint-android:2.0.0'
+    implementation 'com.github.fingerprintjs:fingerprint-android:2.0.2'
 
     // Resolved by Central Maven
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0'
