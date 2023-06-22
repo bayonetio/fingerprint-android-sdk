@@ -17,6 +17,10 @@ import java.util.concurrent.Executors
 val STORE_KEY = "bayonet"
 val STORE_TOKEN_KEY = "token"
 
+val ENVIRONMENT_PRODUCTION_KEY = "production"
+val ENVIRONMENT_STAGING_KEY = "staging"
+val ENVIRONMENT_DEVELOP_KEY = "develop"
+
 /**
  * FingerprintService is the service to manage the device's fingerprint.
  *
@@ -26,7 +30,7 @@ val STORE_TOKEN_KEY = "token"
 class FingerprintService(
     private val ctx: Context,
     private val apiKey: String,
-    private val BAYONET_ENVIRONMENT: String? = "live"
+    private val BAYONET_ENVIRONMENT: String = ENVIRONMENT_PRODUCTION_KEY
 ): IFingerprintService {
     // The RestAPI Service
     private var restAPIService: IRestAPI;
@@ -37,16 +41,11 @@ class FingerprintService(
         // Validate the parameters
         require(apiKey.isNotBlank()) { "The api key cannot be empty" }
 
-        val url = when (BAYONET_ENVIRONMENT) {
-            "develop" -> ctx.getString(R.string.develop_url)
-            "staging" -> ctx.getString(R.string.sandbox_url)
-            else -> ctx.getString(R.string.live_url)
-        }
-
         // Initialize the RestAPI Service
         val restAPIServiceParameters = RestAPIServiceParameters(
-            url,
             apiKey,
+            BAYONET_ENVIRONMENT,
+            ctx,
         )
         this.restAPIService = RestAPIService(restAPIServiceParameters)
     }

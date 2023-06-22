@@ -1,5 +1,7 @@
 package io.bayonet.fingerprint.services
 
+import android.content.Context
+import io.bayonet.fingeprint.R
 import io.bayonet.fingerprint.core.domain.GetTokenResponse
 import io.bayonet.fingerprint.core.domain.IRestAPI
 import io.bayonet.fingerprint.core.domain.Token
@@ -12,8 +14,9 @@ import kotlin.jvm.Throws
 import java.lang.Exception
 
 data class RestAPIServiceParameters(
-    val url: String,
     val apiKey: String,
+    val BAYONET_ENVIRONMENT: String,
+    val ctx: Context,
 )
 
 /**
@@ -23,15 +26,22 @@ data class RestAPIServiceParameters(
 class RestAPIService(
     private val params: RestAPIServiceParameters
 ): IRestAPI {
+    private lateinit var url: String
     private val REST_API_GET_TOKEN_PATH: String = "token"
     private val REST_API_REFRESH_TOKEN_PATH: String = "refresh"
 
     init {
         require(params.apiKey.isNotBlank()) { "The api key cannot be empty" }
-        require(params.url.isNotBlank()) { "The url cannot be empty" }
+        require(params.BAYONET_ENVIRONMENT.isNotBlank()) { "The BAYONET_ENVIRONMENT cannot be empty" }
+
+        url = when (params.BAYONET_ENVIRONMENT) {
+            ENVIRONMENT_DEVELOP_KEY -> params.ctx.getString(R.string.url_develop)
+            ENVIRONMENT_STAGING_KEY -> params.ctx.getString(R.string.url_staging)
+            else -> params.ctx.getString(R.string.url_production)
+        }
 
         try {
-            URL(params.url)
+            URL(url)
         } catch (_: Exception) {
             throw IllegalArgumentException("The url is not valid")
         }
@@ -45,7 +55,7 @@ class RestAPIService(
      */
     @Throws(Exception::class)
     override fun getToken(): GetTokenResponse {
-        val url = URL("${params.url}/${REST_API_GET_TOKEN_PATH}")
+        val url = URL("${url}/${REST_API_GET_TOKEN_PATH}")
         val restApiHttpConnection = url.openConnection() as HttpURLConnection
         restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${params.apiKey}")
 
@@ -84,7 +94,7 @@ class RestAPIService(
      */
     @Throws(Exception::class)
     override fun refresh(token: Token) {
-        val url = URL("${params.url}/${REST_API_REFRESH_TOKEN_PATH}/${token.bayonetID}")
+        val url = URL("${url}/${REST_API_REFRESH_TOKEN_PATH}/${token.bayonetID}")
         val restApiHttpConnection = url.openConnection() as HttpURLConnection
         restApiHttpConnection.requestMethod = "POST"
         restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${params.apiKey}")
