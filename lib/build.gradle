@@ -66,10 +66,8 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation project(path: ':services', configuration: 'default')
-    // implementation project(':services')
-    // implementation "com.fingerprint.android:pro:2.3.1"
-
+    // implementation project(path: ':services', configuration: 'default')
+    implementation 'com.fingerprint.android:pro:2.3.1'
 
     // Resolved by jitpack
     implementation 'com.github.fingerprintjs:fingerprint-android:2.0.2'
