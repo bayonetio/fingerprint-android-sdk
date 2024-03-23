@@ -1,7 +1,7 @@
 package io.bayonet.fingerprint.services
 
 import android.content.Context
-import io.bayonet.fingeprint.R
+import io.bayonet.fingerprint.R
 import io.bayonet.fingerprint.core.domain.GetTokenResponse
 import io.bayonet.fingerprint.core.domain.IRestAPI
 import io.bayonet.fingerprint.core.domain.Token
@@ -57,6 +57,7 @@ class RestAPIService(
     override fun getToken(): GetTokenResponse {
         val url = URL("${url}/${REST_API_GET_TOKEN_PATH}")
         val restApiHttpConnection = url.openConnection() as HttpURLConnection
+        restApiHttpConnection.requestMethod = "POST"
         restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${params.apiKey}")
 
         val unauthorizedRequestCodes = listOf<Int>(
@@ -96,7 +97,7 @@ class RestAPIService(
     override fun refresh(token: Token) {
         val url = URL("${url}/${REST_API_REFRESH_TOKEN_PATH}/${token.bayonetID}")
         val restApiHttpConnection = url.openConnection() as HttpURLConnection
-        restApiHttpConnection.requestMethod = "POST"
+        restApiHttpConnection.requestMethod = "PUT"
         restApiHttpConnection.setRequestProperty("Authorization", "Bearer ${params.apiKey}")
 
         val unauthorizedRequestCodes = listOf<Int>(

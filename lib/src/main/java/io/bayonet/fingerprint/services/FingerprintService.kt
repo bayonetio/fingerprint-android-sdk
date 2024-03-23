@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 
-import io.bayonet.fingeprint.R
+import io.bayonet.fingerprint.R
 import io.bayonet.fingerprint.core.domain.*
 import io.bayonet.fingerprint.services.android.AndroidFingerprintJSService
 import java.util.concurrent.ExecutorService
@@ -127,7 +127,7 @@ class FingerprintService(
     }
 
     /**
-     * setStoreToken sove the token in shared preferences
+     * setStoreToken saves the token in shared preferences.
      *
      * @returns void
      */

@@ -11,7 +11,7 @@ import kotlinx.serialization.json.JsonNames
  */
 @Serializable
 data class ExternalServicesConfigurationResponse(
-    @JsonNames("fingerprintjs")
+    @JsonNames("fingerprint_js")
     val fingerprintjs: FingerprintJSServiceConfiguration,
 )
 
@@ -23,6 +23,6 @@ data class ExternalServicesConfigurationResponse(
  */
 @Serializable
 data class FingerprintJSServiceConfiguration(
-    @JsonNames("apikey")
+    @JsonNames("api_key")
     val apiKey: String,
 )

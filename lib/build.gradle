@@ -27,6 +27,7 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 32
+        namespace "io.bayonet.fingerprint"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -74,6 +75,7 @@ afterEvaluate {
 
 dependencies {
     implementation project(path: ':services', configuration: 'default')
+    implementation "com.fingerprint.android:pro:2.4.0"
 
     // Resolved by jitpack
     implementation 'com.github.fingerprintjs:fingerprint-android:2.0.0'
