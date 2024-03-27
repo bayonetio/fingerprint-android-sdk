@@ -30,7 +30,8 @@ val ENVIRONMENT_DEVELOP_KEY = "develop"
 class FingerprintService(
     private val ctx: Context,
     private val apiKey: String,
-    private val BAYONET_ENVIRONMENT: String = ENVIRONMENT_PRODUCTION_KEY
+    // Todo: change env to production
+    private val BAYONET_ENVIRONMENT: String = ENVIRONMENT_DEVELOP_KEY
 ): IFingerprintService {
     // The RestAPI Service
     private var restAPIService: IRestAPI;

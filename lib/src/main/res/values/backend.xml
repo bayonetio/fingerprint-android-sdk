@@ -2,5 +2,5 @@
 <resources>
     <string name="url_production">https://api.bayonet.io/v3/fp</string>
     <string name="url_staging">https://staging-api.bayonet.io/v3/fp</string>
-    <string name="url_develop">http://10.0.2.2:9000/v3/fp</string>
+    <string name="url_develop">https://f9a3-2001-861-3d10-3740-a0e3-d0c2-baf4-c8e3.ngrok-free.app/v3/fp</string>
 </resources>
